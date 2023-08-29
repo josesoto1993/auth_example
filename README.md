@@ -2,7 +2,7 @@
 
 Este repositorio ofrece un vistazo detallado sobre cómo implementar la autenticación y la autorización en aplicaciones Java.
 
-## Índice
+# Índice
 1. [¿Qué es la Autenticación?](#qué-es-la-autenticación)
 2. [¿Qué es la Autorización?](#qué-es-la-autorización)
 3. [Diferencias entre Autenticación y Autorización](#diferencias-entre-autenticación-y-autorización)
@@ -12,7 +12,7 @@ Este repositorio ofrece un vistazo detallado sobre cómo implementar la autentic
 La autenticación es el proceso de verificar la identidad de un usuario, sistema o aplicación. En el contexto de una aplicación web, por ejemplo, se podría requerir que los usuarios ingresen un nombre de usuario y una contraseña para autenticarse antes de poder acceder a los recursos del sistema.
 
 ```
-public User authUser(String username, String password) throws AccessDeniedException {
+public User authentication(String username, String password) throws AccessDeniedException {
     Optional<User> optionalUser = userRepository.findUserForUsernameAndPassword(username, password);
     
     if (optionalUser.isPresent()) {
@@ -32,7 +32,7 @@ public User authUser(String username, String password) throws AccessDeniedExcept
 Una vez que un usuario se ha autenticado, la autorización es el proceso de determinar qué recursos o áreas tiene permiso para acceder o modificar. Esto generalmente se hace a través de roles o permisos que se asignan a los usuarios autenticados.
 
 ```
-public boolean authAdminArea(User user) throws AccessDeniedException {
+public boolean authorization(User user) throws AccessDeniedException {
     Optional<User> dbUser = userRepository.findUserForUsername(user.getUsername());
     
     if (!dbUser.isPresent()) {
