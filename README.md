@@ -6,6 +6,7 @@ Este repositorio ofrece un vistazo detallado sobre cómo implementar la autentic
 1. [¿Qué es la Autenticación?](#qué-es-la-autenticación)
 2. [¿Qué es la Autorización?](#qué-es-la-autorización)
 3. [Diferencias entre Autenticación y Autorización](#diferencias-entre-autenticación-y-autorización)
+4. [Aclaratorias y mejoras en producción](#Aclaraciones)
 
 ## ¿Qué es la Autenticación?
 
@@ -53,3 +54,6 @@ public boolean authorization(User user) throws AccessDeniedException {
 
 En otras palabras, la autenticación se realiza antes de la autorización y es un requisito para llevar a cabo la autorización.
 
+## Aclaraciones
+
+Esta app es solo de ejemplo sobre Autenticación y Autorización, no es para utilizar en producción ya que no esta manejando realmente tokens y no tiene un correcto manejo de errores, entre otras cosas. Es un simple ejemplo interactivo de las definiciones.
