@@ -1,4 +1,4 @@
-package com.auth.demo.config;
+package com.auth.demo.config.filters;
 
 import com.auth.demo.token.TokenService;
 import jakarta.servlet.*;
