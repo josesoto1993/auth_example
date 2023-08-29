@@ -11,8 +11,8 @@ Este repositorio ofrece un vistazo detallado sobre cómo implementar la autentic
 
 La autenticación es el proceso de verificar la identidad de un usuario, sistema o aplicación. En el contexto de una aplicación web, por ejemplo, se podría requerir que los usuarios ingresen un nombre de usuario y una contraseña para autenticarse antes de poder acceder a los recursos del sistema.
 
-```java
-public User autenticar(String username, String password) throws AccessDeniedException {
+```
+public User authUser(String username, String password) throws AccessDeniedException {
     Optional<User> optionalUser = userRepository.findUserForUsernameAndPassword(username, password);
     
     if (optionalUser.isPresent()) {
@@ -31,7 +31,7 @@ public User autenticar(String username, String password) throws AccessDeniedExce
 
 Una vez que un usuario se ha autenticado, la autorización es el proceso de determinar qué recursos o áreas tiene permiso para acceder o modificar. Esto generalmente se hace a través de roles o permisos que se asignan a los usuarios autenticados.
 
-```java
+```
 public boolean authAdminArea(User user) throws AccessDeniedException {
     Optional<User> dbUser = userRepository.findUserForUsername(user.getUsername());
     
