@@ -11,6 +11,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    public static final int TOKEN_VALID_MINUTES = 5;
     private final UserRepository userRepository;
 
     public String authentication(UserLoginReq req) {
@@ -21,7 +22,7 @@ public class UserService {
                 ));
 
         user.setToken(newTokenFrom(req.getUsername(), req.getPassword()));
-        user.setTokenValidDate(LocalDateTime.now().plusMinutes(5));
+        user.setTokenValidDate(LocalDateTime.now().plusMinutes(TOKEN_VALID_MINUTES));
 
         User savedUser = userRepository.save(user);
 

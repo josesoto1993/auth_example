@@ -13,17 +13,21 @@ Este repositorio ofrece un vistazo detallado sobre cómo implementar la autentic
 La autenticación es el proceso de verificar la identidad de un usuario, sistema o aplicación. En el contexto de una aplicación web, por ejemplo, se podría requerir que los usuarios ingresen un nombre de usuario y una contraseña para autenticarse antes de poder acceder a los recursos del sistema.
 
 ```
-public User authentication(String username, String password) throws AccessDeniedException {
-    Optional<User> optionalUser = userRepository.findUserForUsernameAndPassword(username, password);
-    
-    if (optionalUser.isPresent()) {
-        User user = optionalUser.get();
-        // Se añade algun método para mantener el auth, en este caso token
-        user.setToken(newTokenFrom(username, password));
-        return user;
-    } else {
-        throw new AccessDeniedException("Acceso denegado: usuario o contraseña incorrectos");
-    }
+public String authentication(UserLoginReq req) {
+    User user = userRepository.findByUsernameAndPassword(req.getUsername(), req.getPassword())
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Acceso denegado: usuario o contraseña incorrectos"
+            ));
+
+    // Se guarda el nuevo token
+    user.setToken(newTokenFrom(req.getUsername(), req.getPassword()));
+    user.setTokenValidDate(LocalDateTime.now().plusMinutes(TOKEN_VALID_MINUTES));
+
+    User savedUser = userRepository.save(user);
+
+    // Se retorna el token
+    return savedUser.getToken();
 }
 
 ```
@@ -33,17 +37,36 @@ public User authentication(String username, String password) throws AccessDenied
 Una vez que un usuario se ha autenticado, la autorización es el proceso de determinar qué recursos o áreas tiene permiso para acceder o modificar. Esto generalmente se hace a través de roles o permisos que se asignan a los usuarios autenticados.
 
 ```
-public boolean authorization(User user) throws AccessDeniedException {
-    Optional<User> dbUser = userRepository.findUserForUsername(user.getUsername());
-    
-    if (!dbUser.isPresent()) {
-        throw new AccessDeniedException("Acceso denegado: usuario no encontrado en la base de datos");
+public boolean authorizationAdmin(String token) {
+    Role userRole = getUserRole(token);
+    // Solo un admin puede entrar a area Admin
+    return Role.ADMIN.equals(userRole);
+}
+
+public boolean authorizationUser(String token) {
+    Role userRole = getUserRole(token);
+    // Tanto un admin como un usuario pueden entrar a area de usuario
+    return Role.ADMIN.equals(userRole) || Role.USER.equals(userRole);
+}
+
+private Role getUserRole(String token) {
+    // Se busca si hay usuario para un determinado token
+    Optional<User> dbUser = userRepository.findByToken(token);
+
+    // Si no existe el usuario para el token, no es valido
+    User foundUser = dbUser
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Acceso denegado: Token no encontrado en la base de datos"
+            ));
+
+    // Si el token esta expirado, no es valido
+    if (foundUser.getTokenValidDate().isBefore(LocalDateTime.now())) {
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Acceso denegado: el token ha expirado");
     }
-    
-    boolean isAuthenticated = user.getToken().equals(dbUser.get().getToken());
-    boolean isAdmin = Roles.ADMIN.equals(user.getRole());
-    
-    return isAuthenticated && isAdmin;
+        
+    // Si todo es valido, enviar los roles
+    return foundUser.getRole();
 }
 ```
 
