@@ -1,6 +1,9 @@
+package com.auth.demo.user;
+
 public enum Role {
     USER("user"),
-    ADMIN("admin");
+    ADMIN("admin"),
+    EXTERNAL("external");
 
     private final String roleName;
 
