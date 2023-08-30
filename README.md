@@ -112,4 +112,4 @@ private boolean isAnAdminRequest(HttpServletRequest req) {
 
 ## Aclaraciones
 
-Esta app es solo de ejemplo sobre Autenticación y Autorización, no es para utilizar en producción ya que no esta manejando realmente tokens y no tiene un correcto manejo de errores, entre otras cosas. Es un simple ejemplo interactivo de las definiciones.
+Esta app es solo de ejemplo sobre Autenticación y Autorización, no es para utilizar en producción ya que no esta manejando realmente tokens, la password no esta hasheada y no tiene un correcto manejo de errores, entre otras cosas. Es un simple ejemplo interactivo de las definiciones.
