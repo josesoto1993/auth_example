@@ -63,7 +63,10 @@ private Role getUserRole(String token) {
 
     // Si el token esta expirado, no es valido
     if (foundUser.getTokenValidDate().isBefore(LocalDateTime.now())) {
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Acceso denegado: el token ha expirado");
+        throw new ResponseStatusException(
+            HttpStatus.UNAUTHORIZED,
+            "Acceso denegado: el token ha expirado"
+        );
     }
         
     // Si todo es valido, enviar los roles
